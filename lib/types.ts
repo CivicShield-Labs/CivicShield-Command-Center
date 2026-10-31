@@ -1,4 +1,4 @@
-﻿export type VehicleBehavior =
+export type VehicleBehavior =
   | "NORMAL"
   | "SPEEDING"
   | "FLEEING"

@@ -1,4 +1,4 @@
-﻿import { platformFetch } from "@/lib/server-api";
+import { platformFetch } from "@/lib/server-api";
 
 export async function GET(request: Request) {
   try {
