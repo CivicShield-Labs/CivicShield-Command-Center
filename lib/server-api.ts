@@ -4,13 +4,14 @@ const simulatorUrl =
 const platformUrl =
   process.env.CIVICSHIELD_PLATFORM_URL ?? "http://localhost:8080";
 
-function platformAuthorization(): string {
-  const username =
-    process.env.CIVICSHIELD_PLATFORM_USER ?? "civicshield";
+function platformAuthorization(): string | null {
+  const username = process.env.CIVICSHIELD_PLATFORM_USER;
+  const password = process.env.CIVICSHIELD_PLATFORM_PASSWORD;
 
-  const password =
-    process.env.CIVICSHIELD_PLATFORM_PASSWORD ??
-    "change-this-before-any-deployment";
+  // Never fall back to published default credentials: an unset value must
+  // fail closed at the platform boundary instead of authenticating as a
+  // well-known user that anyone reading this repository can guess.
+  if (!username || !password) return null;
 
   return `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
 }
@@ -33,11 +34,13 @@ export async function platformFetch(
   path: string,
   init?: RequestInit
 ): Promise<Response> {
+  const authorization = platformAuthorization();
+
   return fetch(`${platformUrl}${path}`, {
     ...init,
     cache: "no-store",
     headers: {
-      Authorization: platformAuthorization(),
+      ...(authorization ? { Authorization: authorization } : {}),
       "Content-Type": "application/json",
       ...(init?.headers ?? {})
     }
