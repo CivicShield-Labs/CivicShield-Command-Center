@@ -1,4 +1,4 @@
-﻿const simulatorUrl =
+const simulatorUrl =
   process.env.CIVICSHIELD_SIMULATOR_URL ?? "http://localhost:8081";
 
 const platformUrl =

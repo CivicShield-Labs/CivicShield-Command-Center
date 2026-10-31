@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type {
@@ -100,13 +100,16 @@ export default function CommandCenter() {
   }, []);
 
   useEffect(() => {
-    refresh();
-
+    // Defer the first read so this effect never sets state synchronously;
+    // the interval then refreshes the dashboard once per second.
+    const initial = window.setTimeout(refresh, 0);
     const interval =
       window.setInterval(refresh, 1000);
 
-    return () =>
+    return () => {
+      window.clearTimeout(initial);
       window.clearInterval(interval);
+    };
   }, [refresh]);
 
   async function command(

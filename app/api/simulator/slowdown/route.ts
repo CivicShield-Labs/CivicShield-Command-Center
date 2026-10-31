@@ -1,4 +1,4 @@
-﻿import { simulatorFetch } from "@/lib/server-api";
+import { simulatorFetch } from "@/lib/server-api";
 
 export async function POST(request: Request) {
   try {
