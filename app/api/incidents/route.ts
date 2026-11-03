@@ -1,6 +1,10 @@
 import { platformFetch } from "@/lib/server-api";
+import { authorizeCommandCenter } from "@/lib/command-auth";
 
 export async function GET(request: Request) {
+  const unauthorized = authorizeCommandCenter(request);
+  if (unauthorized) return unauthorized;
+
   try {
     const url = new URL(request.url);
 
