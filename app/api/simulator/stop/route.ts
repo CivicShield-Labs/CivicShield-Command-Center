@@ -1,6 +1,12 @@
 import { simulatorFetch } from "@/lib/server-api";
+import { authorizeCommandCenter, requireSameOriginMutation } from "@/lib/command-auth";
 
-export async function POST() {
+export async function POST(request: Request) {
+  const unauthorized = authorizeCommandCenter(request);
+  if (unauthorized) return unauthorized;
+  const crossOrigin = requireSameOriginMutation(request);
+  if (crossOrigin) return crossOrigin;
+
   try {
     const response = await simulatorFetch("/api/simulator/stop", {
       method: "POST"
